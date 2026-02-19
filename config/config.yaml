@@ -339,7 +339,7 @@ ai:
   # NVIDIA NIM API 配置
   # 使用 Gemma 7B 轻量模型，适合翻译任务
   
-  model: "openai/google/gemma-7b"
+  model: "openai/google/gemma-2-2b-it"
 
   api_key: ""                       # 留空，使用 GitHub Secrets: AI_API_KEY
   
@@ -357,7 +357,7 @@ ai:
                                     #    (原理：前缀 openai/ 强制 LiteLLM 使用 OpenAI 协议格式进行通信)
 
 
-  timeout: 120                      # 请求超时（秒）
+  timeout: 300                      # 请求超时（秒）- 增加到5分钟
 
   temperature: 0.2                  # Gemma 推荐值
   
