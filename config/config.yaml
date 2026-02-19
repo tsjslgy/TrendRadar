@@ -361,8 +361,7 @@ ai:
 
   temperature: 0.2                  # Gemma 推荐值
   
-  max_tokens: 5000                  # 最大生成 token 数
-                                    # 注意：如果 API 不支持此参数(报 HTTP 400)，请设为 0 以禁用发送
+  max_tokens: 0                     # 设为0禁用，让API自动处理
   # 高级选项
   num_retries: 1                    # 失败重试次数
   fallback_models: []               # 备用模型列表（可选）
