@@ -130,10 +130,6 @@ rss:
       name: "伯克希尔-Google新闻"
       url: "https://news.google.com/rss/search?q=Berkshire+Hathaway+Warren+Buffett&hl=en-US&gl=US&ceid=US:en"
 
-    - id: "seeking-alpha"
-      name: "SeekingAlpha"
-      url: "https://seekingalpha.com/api/sa/combined/bridgewater-associates.xml"
-
 
 # ===============================================================
 # 4. 报告模式
@@ -341,13 +337,13 @@ storage:
 # ===============================================================
 ai:
   # NVIDIA NIM API 配置
-  # 模型使用 nvidia/llama-3.1-nemotron-70b-instruct
+  # LiteLLM 调用 NVIDIA 需要 nvidia_nim/ 前缀
   
-  model: "nvidia/llama-3.1-nemotron-70b-instruct"
+  model: "nvidia_nim/nvidia/llama-3.1-nemotron-70b-instruct"
 
   api_key: ""                       # 留空，使用 GitHub Secrets: AI_API_KEY
   
-  api_base: "https://integrate.api.nvidia.com/v1"
+  api_base: ""                      # NVIDIA NIM 不需要自定义 api_base
                                     # 示例: https://api.openai.com/v1（自建代理或兼容接口）
                                     #
                                     # 💡 超级重要：连接任意兼容 OpenAI 协议的模型商
