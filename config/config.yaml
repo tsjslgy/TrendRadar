@@ -53,7 +53,10 @@ schedule:
 #   - name: 显示名称（可自定义，修改后不影响运行）
 # ===============================================================
 platforms:
-  enabled: false                        # 禁用内置热榜平台（不需要中文热榜）
+  enabled: true                         # 需要启用，否则报告生成可能失败
+  sources:
+    - id: "wallstreetcn-hot"
+      name: "华尔街见闻"                 # 保留一个财经源作为基础
 
 
 
@@ -78,21 +81,9 @@ rss:
       name: "华尔街日报市场"
       url: "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
 
-    - id: "reuters-world"
-      name: "路透社全球"
-      url: "https://feeds.reuters.com/Reuters/worldNews"
-
-    - id: "reuters-business"
-      name: "路透社财经"
-      url: "https://feeds.reuters.com/reuters/businessNews"
-
-    - id: "reuters-economy"
-      name: "路透社经济"
-      url: "https://feeds.reuters.com/news/economy"
-
-    - id: "reuters-politics"
-      name: "路透社政治"
-      url: "https://feeds.reuters.com/Reuters/PoliticsNews"
+    - id: "reuters-news"
+      name: "路透社新闻"
+      url: "https://ir.thomsonreuters.com/rss/news-releases.xml?items=15"
 
     # ========== 日本 ==========
     - id: "nhk-world"
@@ -113,9 +104,13 @@ rss:
       name: "越南快讯"
       url: "https://e.vnexpress.net/rss/news.rss"
 
-    - id: "vneconomy"
-      name: "越南经济"
-      url: "https://en.vneconomy.vn/retrieval-rss.html"
+    - id: "vneconomy-news"
+      name: "越南经济-最新"
+      url: "https://en.vneconomy.vn/tin-moi.rss"
+
+    - id: "vneconomy-invest"
+      name: "越南经济-投资"
+      url: "https://en.vneconomy.vn/investment.rss"
 
     # ========== 加密货币 ==========
     - id: "coindesk"
@@ -123,13 +118,21 @@ rss:
       url: "https://www.coindesk.com/arc/outboundfeeds/rss/"
 
     # ========== 投资/基金动态 ==========
-    - id: "bridgewater"
-      name: "桥水基金动态"
-      url: "https://www.valuewalk.com/tag/bridgewater-associates/feed/"
-
     - id: "marketwatch"
       name: "MarketWatch"
       url: "https://www.marketwatch.com/rss/topstories"
+
+    - id: "bridgewater-google"
+      name: "桥水基金-Google新闻"
+      url: "https://news.google.com/rss/search?q=Bridgewater+Associates&hl=en-US&gl=US&ceid=US:en"
+
+    - id: "berkshire-google"
+      name: "伯克希尔-Google新闻"
+      url: "https://news.google.com/rss/search?q=Berkshire+Hathaway+Warren+Buffett&hl=en-US&gl=US&ceid=US:en"
+
+    - id: "seeking-alpha"
+      name: "SeekingAlpha"
+      url: "https://seekingalpha.com/api/sa/combined/bridgewater-associates.xml"
 
 
 # ===============================================================
