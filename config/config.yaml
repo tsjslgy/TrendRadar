@@ -337,13 +337,13 @@ storage:
 # ===============================================================
 ai:
   # NVIDIA NIM API 配置
-  # LiteLLM 调用 NVIDIA 需要 nvidia_nim/ 前缀
+  # 使用 Kimi 模型，兼容 OpenAI 格式
   
-  model: "nvidia_nim/nvidia/llama-3.1-nemotron-70b-instruct"
+  model: "openai/moonshotai/kimi-k2.5"
 
   api_key: ""                       # 留空，使用 GitHub Secrets: AI_API_KEY
   
-  api_base: ""                      # NVIDIA NIM 不需要自定义 api_base
+  api_base: "https://integrate.api.nvidia.com/v1"
                                     # 示例: https://api.openai.com/v1（自建代理或兼容接口）
                                     #
                                     # 💡 超级重要：连接任意兼容 OpenAI 协议的模型商
