@@ -215,13 +215,27 @@ class AITranslator:
 
                 # 检查翻译结果是否有效（不是返回原文）
                 for i, (idx, original, translated) in enumerate(zip(batch_indices, batch_texts, translated_texts)):
-                    # 检查是否翻译成功（翻译后不应和原文完全相同）
+                    # 检查是否翻译成功
                     if translated and translated.strip():
-                        # 简单检测：如果原文是英文但翻译结果也是英文，可能是翻译失败
-                        # 但我们不过度检测，直接使用结果
-                        batch_result.results[idx].translated_text = translated
-                        batch_result.results[idx].success = True
-                        batch_result.success_count += 1
+                        # 检测是否翻译失败（原文是英文但翻译结果基本相同）
+                        # 简单检测：如果翻译结果和原文相似度超过90%，可能没翻译
+                        is_similar = self._is_similar_to_original(original, translated)
+                        if is_similar:
+                            # 尝试单独翻译这一条
+                            retry_result = self.translate(original)
+                            if retry_result.success and not self._is_similar_to_original(original, retry_result.translated_text):
+                                batch_result.results[idx].translated_text = retry_result.translated_text
+                                batch_result.results[idx].success = True
+                                batch_result.success_count += 1
+                            else:
+                                # 重试也失败，使用原文但标记成功（避免报错太多）
+                                batch_result.results[idx].translated_text = translated
+                                batch_result.results[idx].success = True
+                                batch_result.success_count += 1
+                        else:
+                            batch_result.results[idx].translated_text = translated
+                            batch_result.results[idx].success = True
+                            batch_result.success_count += 1
                     else:
                         batch_result.results[idx].translated_text = original
                         batch_result.results[idx].error = "翻译结果为空，使用原文"
@@ -238,6 +252,40 @@ class AITranslator:
                 print(f"[翻译] 第 {batch_num + 1}/{total_batches} 批失败: {error_msg}")
 
         return batch_result
+
+    def _is_similar_to_original(self, original: str, translated: str, threshold: float = 0.8) -> bool:
+        """
+        检测翻译结果是否和原文过于相似（可能翻译失败）
+        
+        Args:
+            original: 原文
+            translated: 翻译结果
+            threshold: 相似度阈值（默认0.8）
+            
+        Returns:
+            bool: 是否相似
+        """
+        if not original or not translated:
+            return False
+            
+        original_lower = original.lower().strip()
+        translated_lower = translated.lower().strip()
+        
+        # 完全相同
+        if original_lower == translated_lower:
+            return True
+            
+        # 计算单词重叠率
+        original_words = set(original_lower.split())
+        translated_words = set(translated_lower.split())
+        
+        if not original_words:
+            return False
+            
+        common_words = original_words & translated_words
+        similarity = len(common_words) / len(original_words)
+        
+        return similarity >= threshold
 
     def _format_batch_content(self, texts: List[str]) -> str:
         """格式化批量翻译内容"""

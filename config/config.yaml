@@ -90,6 +90,10 @@ rss:
       name: "NHK World"
       url: "https://www3.nhk.or.jp/rj/podcast/rss/english.xml"
 
+    - id: "nikkei"
+      name: "日经新闻"
+      url: "https://feedx.net/rss/nikkei.xml"
+
     # ========== 中东/原油 ==========
     - id: "aljazeera"
       name: "半岛电视台"
