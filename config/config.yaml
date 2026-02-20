@@ -90,9 +90,26 @@ rss:
       name: "NHK World"
       url: "https://www3.nhk.or.jp/rj/podcast/rss/english.xml"
 
-    - id: "nikkei"
-      name: "日经新闻"
-      url: "https://feedx.net/rss/nikkei.xml"
+    - id: "japan-google"
+      name: "日本-Google新闻"
+      url: "https://news.google.com/rss/search?q=Japan+economy+BOJ+Nikkei+Yen&hl=en-US&gl=US&ceid=US:en"
+
+    # ========== 欧洲 ==========
+    - id: "uk-foreign"
+      name: "英国外交部"
+      url: "https://www.gov.uk/government/organisations/foreign-commonwealth-development-office.atom"
+
+    - id: "france-elysee"
+      name: "法国总统府"
+      url: "https://www.elysee.fr/feed"
+
+    - id: "europe-google"
+      name: "欧洲-Google新闻"
+      url: "https://news.google.com/rss/search?q=Europe+ECB+EU+economy&hl=en-US&gl=US&ceid=US:en"
+
+    - id: "uk-google"
+      name: "英国-Google新闻"
+      url: "https://news.google.com/rss/search?q=UK+Britain+economy+Bank+of+England&hl=en-US&gl=US&ceid=US:en"
 
     # ========== 中东/原油 ==========
     - id: "aljazeera"

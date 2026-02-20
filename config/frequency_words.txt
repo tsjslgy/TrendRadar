@@ -15,6 +15,17 @@
 彩票
 博彩
 赌博
+体育
+足球
+篮球
+板球
+T20
+世界杯
+cricket
+football
+soccer
+basketball
+sports
 
 [WORD_GROUPS]
 
