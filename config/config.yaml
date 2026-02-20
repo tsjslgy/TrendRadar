@@ -336,36 +336,22 @@ storage:
 # 基于 LiteLLM 统一接口，支持 100+ AI 提供商
 # ===============================================================
 ai:
-  # NVIDIA NIM API 配置
-  # 使用 Gemma 7B 轻量模型，适合翻译任务
+  # NVIDIA NIM API - DeepSeek V3.2
   
-  model: "openai/google/gemma-2-2b-it"
+  model: "openai/deepseek-ai/deepseek-v3.2"
 
   api_key: ""                       # 留空，使用 GitHub Secrets: AI_API_KEY
   
   api_base: "https://integrate.api.nvidia.com/v1"
-                                    # 示例: https://api.openai.com/v1（自建代理或兼容接口）
-                                    #
-                                    # 💡 超级重要：连接任意兼容 OpenAI 协议的模型商
-                                    # 如果你使用的模型商不在上述支持列表中，但提供了兼容 OpenAI 的接口：
-                                    #
-                                    # 1. api_base 填写: 服务商提供的接口地址
-                                    #    例如: https://api.example.com/v1
-                                    #
-                                    # 2. model 填写: "openai/" + 实际模型名称
-                                    #    例如: openai/deepseek-ai/DeepSeek-V3
-                                    #    (原理：前缀 openai/ 强制 LiteLLM 使用 OpenAI 协议格式进行通信)
 
+  timeout: 300
 
-  timeout: 300                      # 请求超时（秒）- 增加到5分钟
-
-  temperature: 0.2                  # Gemma 推荐值
+  temperature: 1.0
   
-  max_tokens: 0                     # 设为0禁用，让API自动处理
-  # 高级选项
-  num_retries: 1                    # 失败重试次数
-  fallback_models: []               # 备用模型列表（可选）
-                                    # 示例: ["openai/gpt-4o-mini", "openai/deepseek-ai/DeepSeek-V3"]
+  max_tokens: 8192
+  
+  num_retries: 1
+  fallback_models: []
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # 额外参数 (高级选项，一般无需修改)
