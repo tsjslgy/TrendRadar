@@ -609,7 +609,7 @@ def send_to_email(
     custom_smtp_server: Optional[str] = None,
     custom_smtp_port: Optional[int] = None,
     *,
-    get_time_func: Callable = None,
+    get_time_func: Optional[Callable] = None,
 ) -> bool:
     """
     发送邮件通知

@@ -261,13 +261,56 @@ class NotificationDispatcher:
                 ai_analysis, display_regions, standalone_data
             )
 
-        # 邮件（保持原有逻辑，已支持多收件人，AI 分析已嵌入 HTML）
+        # 邮件：如果翻译成功，用翻译后的数据重新生成 HTML
         if (
             self.config.get("EMAIL_FROM")
             and self.config.get("EMAIL_PASSWORD")
             and self.config.get("EMAIL_TO")
         ):
-            results["email"] = self._send_email(report_type, html_file_path)
+            # 检查是否翻译成功且有 HTML 文件路径
+            if self.translator and self.translator.enabled and html_file_path:
+                # 用翻译后的数据重新生成 HTML
+                try:
+                    from trendradar.report.html import render_html_content
+                    
+                    # 计算总数
+                    total_news = sum(len(stat.get("titles", [])) for stat in translated_report_data.get("stats", [])) if translated_report_data else 0
+                    
+                    # 渲染翻译后的 HTML
+                    translated_html = render_html_content(
+                        translated_report_data,
+                        total_news,
+                        mode=mode,
+                        update_info=update_info,
+                        region_order=self.config.get("DISPLAY", {}).get("REGION_ORDER"),
+                        get_time_func=self.get_time_func,
+                        rss_items=translated_rss_items,
+                        rss_new_items=translated_rss_new_items,
+                        display_mode=self.config.get("REPORT", {}).get("DISPLAY_MODE", "keyword"),
+                        standalone_data=standalone_data,
+                        ai_analysis=ai_analysis,
+                        show_new_section=self.config.get("DISPLAY", {}).get("REGIONS", {}).get("NEW_ITEMS", False),
+                    )
+                    
+                    if translated_html:
+                        # 保存翻译后的 HTML
+                        translated_html_path = html_file_path.replace(".html", "_translated.html")
+                        with open(translated_html_path, "w", encoding="utf-8") as f:
+                            f.write(translated_html)
+                        print(f"[翻译] 已生成翻译后的HTML: {translated_html_path}")
+                        # 使用翻译后的 HTML 发送邮件
+                        results["email"] = self._send_email(report_type, translated_html_path)
+                    else:
+                        # 翻译失败，用原始 HTML
+                        results["email"] = self._send_email(report_type, html_file_path)
+                except Exception as e:
+                    print(f"[翻译] 生成翻译HTML失败: {e}")
+                    results["email"] = self._send_email(report_type, html_file_path)
+            elif html_file_path:
+                # 没有翻译，用原始 HTML
+                results["email"] = self._send_email(report_type, html_file_path)
+            else:
+                print("[邮件] 没有HTML文件，跳过邮件发送")
 
         return results, translated_report_data, translated_rss_items, translated_rss_new_items
 
