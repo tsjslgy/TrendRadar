@@ -90,6 +90,10 @@ rss:
       name: "NHK World"
       url: "https://www3.nhk.or.jp/rj/podcast/rss/english.xml"
 
+    - id: "nikkei"
+      name: "日经新闻"
+      url: "https://feedx.net/rss/nikkei.xml"
+
     - id: "japan-google"
       name: "日本-Google新闻"
       url: "https://news.google.com/rss/search?q=Japan+economy+BOJ+Nikkei+Yen&hl=en-US&gl=US&ceid=US:en"
