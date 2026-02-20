@@ -928,7 +928,7 @@ class NewsAnalyzer:
 
             # 使用 NotificationDispatcher 发送到所有渠道
             dispatcher = self.ctx.create_notification_dispatcher()
-            results = dispatcher.dispatch_all(
+            results, translated_report_data, translated_rss_items, translated_rss_new_items = dispatcher.dispatch_all(
                 report_data=report_data,
                 report_type=report_type,
                 update_info=update_info_to_send,
@@ -940,6 +940,56 @@ class NewsAnalyzer:
                 ai_analysis=ai_result,
                 standalone_data=standalone_data,
             )
+            
+            # 如果翻译成功且有邮件渠道，重新生成 HTML 并单独发送邮件
+            email_configured = (
+                cfg.get("EMAIL_FROM")
+                and cfg.get("EMAIL_PASSWORD")
+                and cfg.get("EMAIL_TO")
+            )
+            if email_configured and dispatcher.translator and dispatcher.translator.enabled:
+                # 使用翻译后的数据重新生成 HTML
+                from trendradar.report.html import render_html_content
+                from pathlib import Path
+                
+                # 计算总数
+                total_news = sum(len(stat.get("titles", [])) for stat in stats) if stats else 0
+                
+                # 渲染翻译后的 HTML
+                translated_html = render_html_content(
+                    translated_report_data,
+                    total_news,
+                    mode=mode,
+                    update_info=update_info_to_send,
+                    region_order=self.ctx.config.get("DISPLAY", {}).get("REGION_ORDER"),
+                    get_time_func=self.ctx.get_time,
+                    rss_items=translated_rss_items,
+                    rss_new_items=translated_rss_new_items,
+                    display_mode=self.ctx.display_mode,
+                    standalone_data=standalone_data,
+                    ai_analysis=ai_result,
+                    show_new_section=self.ctx.config.get("DISPLAY", {}).get("REGIONS", {}).get("NEW_ITEMS", False),
+                )
+                
+                # 保存翻译后的 HTML
+                if translated_html and html_file_path:
+                    translated_html_path = html_file_path.replace(".html", "_translated.html")
+                    with open(translated_html_path, "w", encoding="utf-8") as f:
+                        f.write(translated_html)
+                    
+                    # 发送翻译后的邮件
+                    from trendradar.notification.senders import send_to_email
+                    email_result = send_to_email(
+                        from_email=cfg["EMAIL_FROM"],
+                        password=cfg["EMAIL_PASSWORD"],
+                        to_email=cfg["EMAIL_TO"],
+                        report_type=report_type,
+                        html_file_path=translated_html_path,
+                        custom_smtp_server=cfg.get("EMAIL_SMTP_SERVER", ""),
+                        custom_smtp_port=cfg.get("EMAIL_SMTP_PORT", ""),
+                        get_time_func=self.ctx.get_time,
+                    )
+                    results["email"] = email_result
 
             if not results:
                 print("未配置任何通知渠道，跳过通知发送")

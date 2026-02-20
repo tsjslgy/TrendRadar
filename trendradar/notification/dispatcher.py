@@ -173,7 +173,7 @@ class NotificationDispatcher:
         rss_new_items: Optional[List[Dict]] = None,
         ai_analysis: Optional[AIAnalysisResult] = None,
         standalone_data: Optional[Dict] = None,
-    ) -> Dict[str, bool]:
+    ) -> tuple:
         """
         分发通知到所有已配置的渠道（支持热榜+RSS合并推送+AI分析+独立展示区）
 
@@ -190,71 +190,74 @@ class NotificationDispatcher:
             standalone_data: 独立展示区数据（可选）
 
         Returns:
-            Dict[str, bool]: 每个渠道的发送结果，key 为渠道名，value 为是否成功
+            tuple: (results, translated_report_data, translated_rss_items, translated_rss_new_items)
+            - results: 每个渠道的发送结果
+            - translated_report_data: 翻译后的报告数据（如果翻译失败则为原始数据）
+            - translated_rss_items: 翻译后的 RSS 条目
+            - translated_rss_new_items: 翻译后的 RSS 新增条目
         """
         results = {}
 
-        # 获取区域显示配置
         display_regions = self.config.get("DISPLAY", {}).get("REGIONS", {})
 
-        # 执行翻译（如果启用）
-        report_data, rss_items, rss_new_items = self._translate_content(
+        # 执行翻译（如果启用）并获取翻译后的数据
+        translated_report_data, translated_rss_items, translated_rss_new_items = self._translate_content(
             report_data, rss_items, rss_new_items
         )
 
         # 飞书
         if self.config.get("FEISHU_WEBHOOK_URL"):
             results["feishu"] = self._send_feishu(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
         # 钉钉
         if self.config.get("DINGTALK_WEBHOOK_URL"):
             results["dingtalk"] = self._send_dingtalk(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
         # 企业微信
         if self.config.get("WEWORK_WEBHOOK_URL"):
             results["wework"] = self._send_wework(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
         # Telegram（需要配对验证）
         if self.config.get("TELEGRAM_BOT_TOKEN") and self.config.get("TELEGRAM_CHAT_ID"):
             results["telegram"] = self._send_telegram(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
         # ntfy（需要配对验证）
         if self.config.get("NTFY_SERVER_URL") and self.config.get("NTFY_TOPIC"):
             results["ntfy"] = self._send_ntfy(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
         # Bark
         if self.config.get("BARK_URL"):
             results["bark"] = self._send_bark(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
         # Slack
         if self.config.get("SLACK_WEBHOOK_URL"):
             results["slack"] = self._send_slack(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
         # 通用 Webhook
         if self.config.get("GENERIC_WEBHOOK_URL"):
             results["generic_webhook"] = self._send_generic_webhook(
-                report_data, report_type, update_info, proxy_url, mode, rss_items, rss_new_items,
+                translated_report_data, report_type, update_info, proxy_url, mode, translated_rss_items, translated_rss_new_items,
                 ai_analysis, display_regions, standalone_data
             )
 
@@ -266,7 +269,7 @@ class NotificationDispatcher:
         ):
             results["email"] = self._send_email(report_type, html_file_path)
 
-        return results
+        return results, translated_report_data, translated_rss_items, translated_rss_new_items
 
     def _send_to_multi_accounts(
         self,
