@@ -117,6 +117,11 @@ rss:
       name: "CoinDesk"
       url: "https://www.coindesk.com/arc/outboundfeeds/rss/"
 
+    # ========== 印度 ==========
+    - id: "india-google"
+      name: "印度-Google新闻"
+      url: "https://news.google.com/rss/search?q=India+economy+RBI+Modi&hl=en-US&gl=US&ceid=US:en"
+
     # ========== 投资/基金动态 ==========
     - id: "marketwatch"
       name: "MarketWatch"

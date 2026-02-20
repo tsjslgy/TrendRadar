@@ -54,12 +54,14 @@
 /日本央行|BOJ|Bank of Japan/ => 日本央行
 /日元|JPY|yen/ => 日元
 /高市早苗|Takaichi/ => 高市早苗
-/日本首相|Japan Prime Minister/ => 日本首相
+/日本首相|Japan Prime Minister|Prime Minister.*Japan/ => 日本首相
 /日本外交/ => 日本外交
+/\bJapan\b|\bJapanese\b|\bTokyo\b/ => 日本
 
 [日本经济]
 /日经|Nikkei|\bNKY\b/ => 日经指数
 /日本经济/ => 日本经济
+/日本股市|Japan stock/ => 日本股市
 
 # ═══════════════════════════════════════════════════════════════
 # 欧洲 (富时100 + CAC40 + DAX)
@@ -126,11 +128,13 @@
 [越南]
 /越南经济|Vietnam economy/ => 越南经济
 /越南股市|VN-Index/ => 越南股市
+/\bVietnam\b|\bVietnamese\b|越共|越南政府/ => 越南
 
 [印度]
 /印度经济|India economy/ => 印度经济
 /印度央行|RBI|Reserve Bank of India/ => 印度央行
 /卢比|rupee|\bINR\b/ => 印度卢比
+/\bIndia\b|\bIndian\b|莫迪|Modi/ => 印度
 
 # ═══════════════════════════════════════════════════════════════
 # 投资机构信号 (关键!)

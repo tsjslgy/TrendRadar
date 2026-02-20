@@ -132,7 +132,7 @@ class AITranslator:
 
         return result
 
-    def translate_batch(self, texts: List[str], batch_size: int = 20) -> BatchTranslationResult:
+    def translate_batch(self, texts: List[str], batch_size: int = 10) -> BatchTranslationResult:
         """
         批量翻译文本（分批处理，提高成功率）
 
