@@ -53,7 +53,8 @@ schedule:
 #   - name: 显示名称（可自定义，修改后不影响运行）
 # ===============================================================
 platforms:
-  enabled: false                        # 禁用内置热榜平台
+  enabled: true                         # 保持启用以避免报告生成错误
+  sources: []                           # 不添加任何内置平台
 
 
 
@@ -74,9 +75,17 @@ rss:
 
   feeds:
     # ========== 中国财经 ==========
-    - id: "cls"
-      name: "财联社"
-      url: "https://www.cls.cn/api/rss"
+    - id: "caixin-world"
+      name: "财新世界"
+      url: "https://quanwenrss.com/caixin/world"
+
+    - id: "bloomberg"
+      name: "彭博财新"
+      url: "https://quanwenrss.com/bloomberg"
+
+    - id: "morganstanley"
+      name: "摩根士丹利"
+      url: "https://quanwenrss.com/morganstanley/global"
 
     # ========== 美国/全球财经 ==========
     - id: "wsj-markets"
