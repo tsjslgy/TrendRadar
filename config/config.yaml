@@ -55,8 +55,8 @@ schedule:
 platforms:
   enabled: true
   sources:
-    - id: "wallstreetcn-hot-disabled"
-      name: "华尔街见闻"
+    - id: "cls-hot"
+      name: "财联社"
 
 
 
