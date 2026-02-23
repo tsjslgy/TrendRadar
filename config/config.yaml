@@ -40,7 +40,8 @@ app:
 # 详细时间线图请查看 config/timeline.yaml
 # ===============================================================
 schedule:
-  enabled: false                        # 禁用调度系统，使用报告模式
+  enabled: true
+  preset: "morning_evening"
 
 
 # ===============================================================
@@ -52,8 +53,10 @@ schedule:
 #   - name: 显示名称（可自定义，修改后不影响运行）
 # ===============================================================
 platforms:
-  enabled: true                         # 保持启用以避免报告生成错误
-  sources: []                           # 不添加任何内置平台
+  enabled: true
+  sources:
+    - id: "wallstreetcn-hot-disabled"
+      name: "华尔街见闻"
 
 
 
@@ -190,7 +193,7 @@ rss:
 #    • 适用场景：避免重复信息干扰
 # ===============================================================
 report:
-  mode: "daily"                        # 使用daily模式，不依赖热榜数据
+  mode: "current"
 
 
   display_mode: "keyword"             # 分组维度: keyword | platform
