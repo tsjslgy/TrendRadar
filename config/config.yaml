@@ -53,10 +53,7 @@ schedule:
 #   - name: 显示名称（可自定义，修改后不影响运行）
 # ===============================================================
 platforms:
-  enabled: true                         # 需要启用，否则报告生成可能失败
-  sources:
-    - id: "wallstreetcn-hot"
-      name: "华尔街见闻"                 # 保留一个财经源作为基础
+  enabled: false                        # 禁用内置热榜平台
 
 
 
@@ -76,6 +73,11 @@ rss:
     max_age_days: 3
 
   feeds:
+    # ========== 中国财经 ==========
+    - id: "cls"
+      name: "财联社"
+      url: "https://www.cls.cn/api/rss"
+
     # ========== 美国/全球财经 ==========
     - id: "wsj-markets"
       name: "华尔街日报市场"
